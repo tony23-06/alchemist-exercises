@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Alchemist — Reading Exercises (pp. 11–21)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sand: #F5F0E8;
+  --sand-dark: #EDE5D8;
+  --sand-mid: #E0D8CB;
+  --ink: #1A1410;
+  --ink-muted: #5A4F44;
+  --ink-faint: #9A8F84;
+  --gold: #B8860B;
+  --gold-light: #F5E6B0;
+  --teal: #2A6B5E;
+  --teal-light: #E0F0EC;
+  --red: #8B2020;
+  --red-light: #F5E0E0;
+  --blue: #1A3D6B;
+  --blue-light: #E0EBF5;
+  --border: rgba(26,20,16,0.12);
+  --border-strong: rgba(26,20,16,0.22);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--sand);color:var(--ink);font-family:'Source Serif 4',Georgia,serif;font-size:16px;line-height:1.7;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(ellipse at 15% 20%,rgba(184,134,11,0.06) 0%,transparent 50%),radial-gradient(ellipse at 85% 80%,rgba(42,107,94,0.05) 0%,transparent 50%);pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:3rem 2rem 5rem}
+
+/* masthead */
+.masthead{text-align:center;margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border-strong)}
+.eyebrow{font-family:'Playfair Display',serif;font-style:italic;font-size:13px;letter-spacing:0.12em;color:var(--gold);margin-bottom:0.5rem}
+.masthead h1{font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,40px);font-weight:600;line-height:1.2;margin-bottom:0.4rem}
+.masthead-sub{font-size:14px;color:var(--ink-muted);font-style:italic}
+.ornament{margin:1.2rem auto 0;color:var(--gold);font-size:18px;letter-spacing:0.4em;opacity:0.65}
+
+/* tabs */
+.tabs{display:flex;gap:0;margin-bottom:2.5rem;border:1px solid var(--border-strong);border-radius:6px;overflow:hidden;background:var(--sand-dark)}
+.tab{flex:1;padding:11px 10px;font-family:'Source Serif 4',serif;font-size:13px;color:var(--ink-muted);background:none;border:none;cursor:pointer;border-right:1px solid var(--border);transition:all 0.18s;font-weight:300}
+.tab:last-child{border-right:none}
+.tab:hover:not(.active){background:rgba(26,20,16,0.04);color:var(--ink)}
+.tab.active{background:var(--ink);color:var(--sand);font-weight:400}
+
+/* sections */
+.section{display:none}
+.section.active{display:block}
+.section-intro{font-size:14px;color:var(--ink-muted);font-style:italic;line-height:1.6;margin-bottom:2rem;padding:12px 18px;border-left:3px solid var(--gold);background:rgba(184,134,11,0.05);border-radius:0 4px 4px 0}
+
+/* cards */
+.q-card{background:white;border:1px solid var(--border);border-radius:8px;padding:1.4rem 1.5rem;margin-bottom:1.1rem;box-shadow:0 1px 3px rgba(26,20,16,0.04);transition:box-shadow 0.18s}
+.q-card:hover{box-shadow:0 2px 8px rgba(26,20,16,0.08)}
+.q-num{font-family:'Playfair Display',serif;font-size:11px;letter-spacing:0.1em;color:var(--gold);margin-bottom:7px;text-transform:uppercase}
+.q-text{font-size:15px;line-height:1.8;color:var(--ink)}
+
+/* word bank */
+.wb-wrap{background:white;border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin-bottom:2rem}
+.wb-label{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-faint);margin-bottom:10px;font-family:'Source Serif 4',serif;font-weight:400}
+.word-bank{display:flex;flex-wrap:wrap;gap:7px}
+.word{padding:5px 14px;font-size:13px;border:1px solid var(--border-strong);border-radius:20px;cursor:pointer;color:var(--ink);background:var(--sand);font-family:'Source Serif 4',serif;transition:all 0.15s;user-select:none}
+.word:hover{background:var(--gold-light);border-color:var(--gold)}
+.word.selected{background:var(--ink);color:var(--sand);border-color:var(--ink)}
+.word.used{opacity:0.28;cursor:default;pointer-events:none}
+
+/* gaps */
+.gap{display:inline-block;border-bottom:1.5px solid var(--ink-muted);min-width:140px;padding:2px 8px;font-size:14px;font-family:'Source Serif 4',serif;color:var(--ink-muted);text-align:center;cursor:pointer;transition:all 0.15s;font-style:italic;border-radius:2px}
+.gap:hover{background:var(--gold-light)}
+.gap.filled{color:var(--ink);border-bottom-color:var(--gold);font-style:normal}
+.gap.correct{background:var(--teal-light);border-bottom-color:var(--teal);color:var(--teal);font-style:normal}
+.gap.wrong{background:var(--red-light);border-bottom-color:var(--red);color:var(--red);font-style:normal}
+
+/* buttons */
+.check-btn{margin-top:0.75rem;padding:10px 28px;font-family:'Playfair Display',serif;font-size:14px;color:var(--sand);background:var(--ink);border:none;border-radius:4px;cursor:pointer;transition:background 0.15s;letter-spacing:0.03em}
+.check-btn:hover{background:var(--gold)}
+.score-line{font-size:13px;color:var(--ink-muted);margin-top:10px;display:none;font-style:italic}
+.score-line.show{display:block}
+.score-line strong{color:var(--ink);font-style:normal}
+
+/* MC */
+.mc-opts{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.mc-btn{padding:10px 16px;font-size:14px;font-family:'Source Serif 4',serif;text-align:left;border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--ink);background:var(--sand);line-height:1.55;transition:all 0.15s}
+.mc-btn:hover:not(:disabled){background:var(--gold-light);border-color:var(--gold)}
+.mc-btn.correct{background:var(--teal-light);border-color:var(--teal);color:var(--teal)}
+.mc-btn.wrong{background:var(--red-light);border-color:var(--red);color:var(--red)}
+.mc-btn:disabled{cursor:default}
+
+/* TF */
+.tf-opts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.tf-btn{padding:8px 22px;font-size:14px;font-family:'Source Serif 4',serif;border:1px solid var(--border-strong);border-radius:20px;cursor:pointer;color:var(--ink);background:var(--sand);transition:all 0.15s}
+.tf-btn:hover:not(:disabled){background:var(--gold-light);border-color:var(--gold)}
+.tf-btn.correct{background:var(--teal-light);border-color:var(--teal);color:var(--teal)}
+.tf-btn.wrong{background:var(--red-light);border-color:var(--red);color:var(--red)}
+.tf-btn.ng-correct{background:var(--blue-light);border-color:var(--blue);color:var(--blue)}
+.tf-btn:disabled{cursor:default}
+
+/* feedback */
+.feedback{margin-top:10px;font-size:13.5px;line-height:1.55;font-style:italic;padding:9px 13px;border-radius:4px;display:none}
+.feedback.show{display:block}
+.feedback.correct{color:var(--teal);background:var(--teal-light)}
+.feedback.wrong{color:var(--red);background:var(--red-light)}
+.feedback.ng{color:var(--blue);background:var(--blue-light)}
+
+/* ── VOCABULARY MATCHING ── */
+.vocab-layout{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.vocab-col-label{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-faint);margin-bottom:10px;font-family:'Source Serif 4',serif}
+.vocab-word-list,.vocab-def-list{display:flex;flex-direction:column;gap:7px}
+.v-word{padding:10px 16px;font-size:14px;border:1px solid var(--border-strong);border-radius:6px;cursor:pointer;color:var(--ink);background:var(--sand);font-family:'Source Serif 4',serif;transition:all 0.15s;user-select:none;font-style:italic;font-weight:400}
+.v-word:hover:not(.used-v):not(.correct-v):not(.wrong-v){background:var(--gold-light);border-color:var(--gold)}
+.v-word.selected-v{background:var(--ink);color:var(--sand);border-color:var(--ink)}
+.v-word.used-v{opacity:0.4;cursor:default;pointer-events:none}
+.v-def{padding:10px 16px;font-size:13.5px;border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--ink-muted);background:white;font-family:'Source Serif 4',serif;transition:all 0.15s;user-select:none;line-height:1.5}
+.v-def:hover:not(.matched){background:var(--sand-dark);border-color:var(--border-strong)}
+.v-def.matched{cursor:default;pointer-events:none}
+.match-pair{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:6px;background:white;border:1px solid var(--border);margin-bottom:7px;font-size:14px;font-family:'Source Serif 4',serif}
+.match-pair.correct-pair{background:var(--teal-light);border-color:var(--teal)}
+.match-pair.wrong-pair{background:var(--red-light);border-color:var(--red)}
+.pair-word{font-style:italic;color:var(--ink);min-width:130px}
+.pair-arrow{color:var(--ink-faint);font-size:12px}
+.pair-def{color:var(--ink-muted);font-size:13px;line-height:1.4;flex:1}
+.pair-icon{font-size:16px;margin-left:auto}
+.match-pair.correct-pair .pair-word{color:var(--teal)}
+.match-pair.correct-pair .pair-def{color:var(--teal)}
+.match-pair.wrong-pair .pair-word{color:var(--red)}
+.match-pair.wrong-pair .pair-def{color:var(--red)}
+.v-hint{font-size:12px;color:var(--ink-faint);margin-bottom:1rem;font-style:italic}
+.vocab-pending{display:flex;flex-direction:column;gap:6px}
+.vocab-matched-area{margin-top:1.5rem}
+.vocab-matched-label{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-faint);margin-bottom:10px;font-family:'Source Serif 4',serif}
+.vocab-score-wrap{margin-top:1rem;display:none}
+.vocab-score-wrap.show{display:block}
+.vocab-score-wrap .check-btn{margin-top:0}
+
+/* context sentences section */
+.context-card{background:white;border:1px solid var(--border);border-radius:8px;padding:1.4rem 1.5rem;margin-bottom:1rem}
+.context-sentence{font-size:15px;line-height:1.8;color:var(--ink);margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--border)}
+.context-sentence:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.context-q{font-size:13px;color:var(--ink-muted);font-style:italic;margin-top:6px}
+
+/* footer */
+footer{text-align:center;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);font-size:12px;color:var(--ink-faint);font-style:italic}
+
+@media(max-width:640px){
+  .page{padding:2rem 1rem 4rem}
+  .tabs{flex-direction:column}
+  .tab{border-right:none;border-bottom:1px solid var(--border)}
+  .tab:last-child{border-bottom:none}
+  .tf-opts{flex-direction:column}
+  .tf-btn{text-align:center}
+  .vocab-layout{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="masthead">
+  <div class="eyebrow">Reading Comprehension Exercises · Pre-IELTS</div>
+  <h1>The Alchemist</h1>
+  <div class="masthead-sub">Paulo Coelho &nbsp;·&nbsp; Pages 11–21</div>
+  <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('gap',this)">I. Gap Filling</button>
+  <button class="tab" onclick="showTab('mc',this)">II. Multiple Choice</button>
+  <button class="tab" onclick="showTab('tf',this)">III. True / False / NG</button>
+  <button class="tab" onclick="showTab('vocab',this)">IV. Vocabulary</button>
+</div>
+
+<!-- ══════════ GAP FILLING ══════════ -->
+<div id="gap" class="section active">
+  <p class="section-intro">The sentences below paraphrase or summarise ideas from the text using academic vocabulary. Select a word or phrase from the word bank, then click a gap to place it. Each item is used once only.</p>
+
+  <div class="wb-wrap">
+    <div class="wb-label">Word bank</div>
+    <div class="word-bank">
+      <div class="word" onclick="sw(this)">self-determination</div>
+      <div class="word" onclick="sw(this)">conformity</div>
+      <div class="word" onclick="sw(this)">reciprocity</div>
+      <div class="word" onclick="sw(this)">beginner's luck</div>
+      <div class="word" onclick="sw(this)">intuition</div>
+      <div class="word" onclick="sw(this)">obligation</div>
+      <div class="word" onclick="sw(this)">disillusionment</div>
+      <div class="word" onclick="sw(this)">prestige</div>
+      <div class="word" onclick="sw(this)">tangible</div>
+      <div class="word" onclick="sw(this)">omens</div>
+    </div>
+  </div>
+
+  <div class="q-card"><div class="q-num">Question 1</div><div class="q-text">The old man argues that pursuing one's Personal Legend is not a choice but a moral <span class="gap" id="g1" onclick="fg('g1')">click to fill</span> — something every person is duty-bound to fulfil.</div></div>
+  <div class="q-card"><div class="q-num">Question 2</div><div class="q-text">Melchizedek implies that societal pressure towards <span class="gap" id="g2" onclick="fg('g2')">click to fill</span> is one of the primary forces that causes individuals to abandon their deepest ambitions over time.</div></div>
+  <div class="q-card"><div class="q-num">Question 3</div><div class="q-text">The old man describes what he calls the principle of favorability, which is more commonly known as <span class="gap" id="g3" onclick="fg('g3')">click to fill</span> — an early taste of success designed to strengthen a person's resolve.</div></div>
+  <div class="q-card"><div class="q-num">Question 4</div><div class="q-text">Melchizedek operates on a principle of <span class="gap" id="g4" onclick="fg('g4')">click to fill</span>: he will only share the knowledge of the hidden treasure once the boy has surrendered a portion of what he already owns.</div></div>
+  <div class="q-card"><div class="q-num">Question 5</div><div class="q-text">The stones Urim and Thummim serve as a <span class="gap" id="g5" onclick="fg('g5')">click to fill</span> tool — a physical aid for moments when rational decision-making fails the boy.</div></div>
+  <div class="q-card"><div class="q-num">Question 6</div><div class="q-text">The old man suggests that the <span class="gap" id="g6" onclick="fg('g6')">click to fill</span> attached to certain occupations, such as baking, can distort a person's perception of which life path is truly meaningful.</div></div>
+  <div class="q-card"><div class="q-num">Question 7</div><div class="q-text">The boy's ability to read <span class="gap" id="g7" onclick="fg('g7')">click to fill</span> — such as the appearance of a butterfly or the direction of the wind — is presented as a legitimate form of navigating an uncertain world.</div></div>
+  <div class="q-card"><div class="q-num">Question 8</div><div class="q-text">The wise man's parable of the spoon suggests that <span class="gap" id="g8" onclick="fg('g8')">click to fill</span> is the feeling that sets in when a person realises they have been so consumed by duty that they have missed the richness of life around them.</div></div>
+  <div class="q-card"><div class="q-num">Question 9</div><div class="q-text">The old man frames personal fulfilment as an act of <span class="gap" id="g9" onclick="fg('g9')">click to fill</span>, arguing that fate is not an external force but a lie used to justify passivity.</div></div>
+  <div class="q-card"><div class="q-num">Question 10</div><div class="q-text">Melchizedek's role throughout these pages is consistent: he intervenes at the precise moment a person is closest to giving up, suggesting his purpose is to prevent <span class="gap" id="g10" onclick="fg('g10')">click to fill</span> from becoming permanent surrender.</div></div>
+
+  <div id="gap-score" class="score-line"></div>
+  <button class="check-btn" onclick="checkGaps()">Check answers</button>
+</div>
+
+<!-- ══════════ MULTIPLE CHOICE ══════════ -->
+<div id="mc" class="section">
+  <p class="section-intro">Choose the answer that best reflects the meaning, implication, or argument of the text. More than one option may seem plausible — select the most accurate one based on what is stated or clearly implied.</p>
+  <div id="mc-container"></div>
+</div>
+
+<!-- ══════════ TRUE / FALSE / NOT GIVEN ══════════ -->
+<div id="tf" class="section">
+  <p class="section-intro">Decide whether each statement is <strong>True</strong>, <strong>False</strong>, or <strong>Not Given</strong>. "Not Given" means the text provides no information from which the statement can be confirmed or denied — even if it seems likely. Avoid drawing inferences beyond what is explicitly stated.</p>
+  <div id="tf-container"></div>
+</div>
+
+<!-- ══════════ VOCABULARY ══════════ -->
+<div id="vocab" class="section">
+  <p class="section-intro">Below are ten words taken from the text. Match each word on the left to its correct definition on the right by clicking a word first, then clicking its definition. Once all ten are matched, check your answers.</p>
+
+  <div class="v-hint">Click a word, then click its matching definition.</div>
+
+  <div class="vocab-layout">
+    <div>
+      <div class="vocab-col-label">Words from the text</div>
+      <div class="vocab-word-list" id="v-words"></div>
+    </div>
+    <div>
+      <div class="vocab-col-label">Definitions</div>
+      <div class="vocab-def-list" id="v-defs"></div>
+    </div>
+  </div>
+
+  <div class="vocab-matched-area" id="matched-area" style="display:none">
+    <div class="vocab-matched-label">Matched pairs</div>
+    <div id="matched-list"></div>
+  </div>
+
+  <div class="vocab-score-wrap" id="vocab-score-wrap">
+    <button class="check-btn" onclick="checkVocab()">Check answers</button>
+  </div>
+  <div id="vocab-score-line" class="score-line"></div>
+</div>
+
+<footer>The Alchemist by Paulo Coelho &nbsp;·&nbsp; Exercises prepared for classroom use &nbsp;·&nbsp; Pre-IELTS level</footer>
+</div>
+
+<script>
+/* ═══════ GAP FILLING ═══════ */
+const gapAns={g1:'obligation',g2:'conformity',g3:"beginner's luck",g4:'reciprocity',g5:'tangible',g6:'prestige',g7:'omens',g8:'disillusionment',g9:'self-determination',g10:'disillusionment'};
+let selWord=null,gapVals={};
+
+function sw(el){
+  if(selWord)selWord.classList.remove('selected');
+  selWord=el;el.classList.add('selected');
+}
+function fg(id){
+  if(!selWord)return;
+  const prev=gapVals[id];
+  if(prev){const o=document.querySelector(`.word[data-gv="${prev}"]`);if(o){o.classList.remove('used');o.dataset.gv='';}}
+  const v=selWord.textContent;
+  gapVals[id]=v;selWord.dataset.gv=v;selWord.classList.add('used');selWord.classList.remove('selected');
+  const el=document.getElementById(id);
+  el.textContent=v;el.className='gap filled';selWord=null;
+}
+function checkGaps(){
+  let c=0;
+  for(const[id,ans]of Object.entries(gapAns)){
+    const el=document.getElementById(id);
+    const v=gapVals[id]||'';
+    el.className=(v===ans)?'gap correct':'gap wrong';
+    if(v===ans)c++;
+  }
+  const sc=document.getElementById('gap-score');
+  sc.className='score-line show';
+  sc.innerHTML=`Score: <strong>${c} / 10</strong>`;
+}
+
+/* ═══════ MULTIPLE CHOICE ═══════ */
+const mcQ=[
+  {q:"What does the old man imply when he says that 'what people think about shepherds and bakers becomes more important than their own Personal Legends'?",
+   opts:["People should choose professions based on social status rather than personal desire.","External social judgement gradually erodes an individual's commitment to their authentic goals.","The boy should become a baker to earn the respect of the merchant's daughter.","Society's opinion of a person is ultimately more reliable than that person's own instincts."],
+   ans:1,exp:"The old man is criticising how social opinion supplants personal ambition — not endorsing it. The statement warns that external judgement becomes a substitute for inner purpose."},
+  {q:"When Melchizedek transforms into a stone to assist the emerald miner, what broader principle does this episode most clearly illustrate?",
+   opts:["Physical hardship is always a disguised reward.","The universe intervenes materially to prevent people from abandoning their Personal Legend at the critical moment.","Precious gems can only be found through acts of destruction.","Patience is the most important virtue for those who pursue treasure."],
+   ans:1,exp:"The miner is one stone-throw away from finding his emerald. Melchizedek intervenes precisely at the moment of near-surrender — the pattern the old man describes throughout: the universe acts when a person is closest to giving up."},
+  {q:"The boy offers the old man his wine bottle hoping it will end their conversation. What does this reveal about the boy's attitude at this point in the story?",
+   opts:["He is generous by nature but easily distracted.","He is instinctively resistant to external guidance and prioritises solitude over connection.","He considers the old man a threat to his flock.","He is embarrassed by the contents of the book he is reading."],
+   ans:1,exp:"The boy's impulse is to be left alone — he is not yet open to wisdom. This reluctance is significant because the very guidance he resists is what sets his journey in motion."},
+  {q:"The wise man's parable presents two failures: missing the oil and missing the palace. Which of the following best describes what Coelho suggests through this contrast?",
+   opts:["Responsibility and wonder are mutually exclusive in the real world.","True wisdom lies in holding both duty and experience simultaneously, without allowing one to eclipse the other.","The boy should abandon his flock entirely in order to pursue the treasure.","Material wealth is always a distraction from spiritual growth."],
+   ans:1,exp:"The parable is not advocating for one extreme over the other. The 'secret of happiness' the wise man offers is precisely the ability to remain attentive to both — the spoon and the world around it."},
+  {q:"The old man acknowledges that the Soul of the World is nourished by unhappiness and jealousy as well as happiness. How does this qualification affect his central argument?",
+   opts:["It undermines the idea that pursuing one's Personal Legend leads to happiness.","It suggests that negative emotions are part of a broader universal balance, without contradicting the value of pursuing one's purpose.","It implies that people who fail to follow their Personal Legend contribute positively to the world.","It contradicts his earlier claim that the universe conspires to help those who pursue their dreams."],
+   ans:1,exp:"The old man is acknowledging a fuller picture of the universe — that it is nourished by the full range of human experience — while still maintaining that fulfilling one's purpose is a personal obligation."},
+  {q:"The ticket seller dismisses the boy as 'another dreamer' who lacks the means to travel. What does the text implicitly suggest about this judgement?",
+   opts:["The ticket seller is correct — the boy is not yet ready to make such a journey.","Practical cynicism, while superficially reasonable, fails to account for the forces that assist those who genuinely pursue their Personal Legend.","The boy should have negotiated harder for a cheaper ticket.","The ticket seller represents the voice of Melchizedek in disguise."],
+   ans:1,exp:"The irony is that the ticket seller's reasoning is logical by conventional standards, but the novel consistently positions such logic as a barrier. The boy does eventually make the journey — not through money alone but through commitment to his goal."},
+  {q:"Why does the boy ultimately decide not to tell the baker what Melchizedek said about him?",
+   opts:["He is afraid the baker will become angry and refuse to sell him bread.","He recognises that unsolicited revelation of another person's unlived dreams creates anxiety rather than liberation.","He does not fully believe what the old man told him.","He is saving the information to use as leverage later."],
+   ans:1,exp:"The text says if he told the baker, the man would spend three days thinking about giving everything up. The boy judges that disturbing a person's settled life with their abandoned dream causes suffering, not relief."},
+  {q:"Melchizedek tells the boy that 'there is a force that wants you to realise your Personal Legend; it whets your appetite with a taste of success.' What risk does this principle carry that the text does not explicitly address?",
+   opts:["People may mistake early failure as a sign they have no Personal Legend.","Early success may create false confidence, causing people to underestimate the difficulty of the full journey ahead.","The force will abandon a person if they hesitate for too long.","This principle only applies to people who have already sold their possessions."],
+   ans:1,exp:"The text presents beginner's luck as encouragement. The implicit risk — not discussed — is that early ease may lead to overconfidence or shock when difficulty arrives later."},
+  {q:"The boy reflects that the merchant's daughter probably would not even remember him between visits. What does this realisation contribute to his eventual decision to pursue the treasure?",
+   opts:["It confirms that romantic relationships are incompatible with a life of travel.","It illustrates that a life of repetition and routine offers no guarantee of meaningful connection, which weakens his reasons to remain.","It makes him jealous of the baker and more competitive.","It causes him to regret becoming a shepherd in the first place."],
+   ans:1,exp:"The boy's realisation that the girl's world is unchanged by his absence strips away one of the arguments for staying — weakening his attachment to his current life."},
+  {q:"Melchizedek states he has never again seen anyone he has helped, including Abraham. What does this pattern suggest about the nature of the guidance he offers?",
+   opts:["He is indifferent to the outcomes of those he assists.","His role is catalytic rather than sustained — he initiates transformation but does not accompany it, respecting the individual's autonomy to continue alone.","He is unable to leave the fort at Tarifa and so cannot follow anyone.","He regrets never maintaining contact with those he has guided."],
+   ans:1,exp:"His parting role is structural — he appears, provides the conditions for change, then withdraws. The text frames this as 'his work', not neglect. The individual must pursue the journey independently once the catalyst has acted."}
+];
+
+function buildMC(){
+  const c=document.getElementById('mc-container');
+  mcQ.forEach((q,i)=>{
+    const d=document.createElement('div');
+    d.className='q-card';
+    d.innerHTML=`<div class="q-num">Question ${i+1}</div><div class="q-text">${q.q}</div><div class="mc-opts">${q.opts.map((o,j)=>`<button class="mc-btn" onclick="aMC(this,${i},${j})">${String.fromCharCode(65+j)}.&nbsp;${o}</button>`).join('')}</div><div class="feedback" id="mf${i}"></div>`;
+    c.appendChild(d);
+  });
+}
+function aMC(btn,qi,oi){
+  const btns=btn.closest('.mc-opts').querySelectorAll('.mc-btn');
+  btns.forEach(b=>b.disabled=true);
+  const q=mcQ[qi];const fb=document.getElementById(`mf${qi}`);
+  if(oi===q.ans){btn.classList.add('correct');fb.className='feedback show correct';fb.textContent='✓ '+q.exp;}
+  else{btn.classList.add('wrong');btns[q.ans].classList.add('correct');fb.className='feedback show wrong';fb.textContent='✗ '+q.exp;}
+}
+
+/* ═══════ TRUE / FALSE / NOT GIVEN ═══════ */
+const tfQ=[
+  {q:"The old man's claim that 'the world's greatest lie' is that fate controls our lives is presented in the text as a universally accepted belief among the townspeople.",
+   ans:"False",exp:"False. It is a claim made by the old man to the boy alone. The text does not suggest it is widely held — the old man presents it as a corrective to a common misconception."},
+  {q:"The boy holds out his book to the old man partly because he hopes the man's inability to read will cause him to feel ashamed and leave.",
+   ans:"True",exp:"True. The text explicitly states this as one of the two reasons: if the old man couldn't read, he would probably feel ashamed and decide of his own accord to change benches."},
+  {q:"Melchizedek's request for one-tenth of the boy's flock is consistent with the same proportion he charged Abraham.",
+   ans:"True",exp:"True. The text refers to Abraham's 'one-tenth fee', establishing that this fraction is Melchizedek's standard arrangement, not an arbitrary demand made of the boy specifically."},
+  {q:"The lad in the wise man's story was sent by his father to discover the secret of happiness.",
+   ans:"False",exp:"False. He was sent by a shopkeeper — the text says 'a certain shopkeeper sent his son'. The boy's father is not mentioned."},
+  {q:"The text implies that the emerald miner would have found his gem even without Melchizedek's intervention, given sufficient persistence.",
+   ans:"Not Given",exp:"Not Given. The text describes Melchizedek's intervention as the mechanism by which the emerald is revealed. Whether the miner would eventually have succeeded independently is never addressed."},
+  {q:"Melchizedek reveals his identity by writing the names of the boy's family and acquaintances in the sand of the plaza.",
+   ans:"False",exp:"False. Writing in the sand is how he demonstrates knowledge of the boy's private life, not how he reveals his identity. He separately states 'I'm the king of Salem' in conversation."},
+  {q:"The boy's father actively encouraged him to become a shepherd rather than a priest.",
+   ans:"Not Given",exp:"Not Given. The text says the boy's father wanted him to be a priest, and the boy chose shepherding himself. Whether the father later accepted or encouraged this is never stated."},
+  {q:"The old man suggests that the baker's decision to delay travel until old age means he will never travel at all.",
+   ans:"True",exp:"True. The old man says the baker 'never realised that people are capable, at any time in their lives, of doing what they dream of' — framing the baker's deferral as equivalent to abandoning the dream permanently."},
+  {q:"The black stone among Urim and Thummim represents a negative answer, while the white stone represents a positive one.",
+   ans:"True",exp:"True. The old man states explicitly: the black stone signifies 'yes' and the white stone signifies 'no'."},
+  {q:"Melchizedek charges every person he helps exactly one-tenth of their most valued possession.",
+   ans:"Not Given",exp:"Not Given. The text mentions one-tenth in relation to the boy's flock and Abraham, but never establishes this as a universal rule applied to everyone he assists."},
+  {q:"The boy's realisation that the merchant's daughter would not notice whether he arrived or not strengthens his resolve to remain a shepherd.",
+   ans:"False",exp:"False. The realisation has the opposite effect — it weakens his attachment to his current life, becoming one of the factors that pushes him toward pursuing the treasure."},
+  {q:"The text explicitly states that the levanter wind brought both the Moors and the dreams of men who sought adventure and gold.",
+   ans:"True",exp:"True. The passage reads that the wind 'had brought the Moors' and 'had brought with it the sweat and the dreams of men who had once left to search for the unknown, and for gold and adventure'."}
+];
+
+function buildTF(){
+  const c=document.getElementById('tf-container');
+  tfQ.forEach((q,i)=>{
+    const d=document.createElement('div');
+    d.className='q-card';
+    d.innerHTML=`<div class="q-num">Question ${i+1}</div><div class="q-text">${q.q}</div><div class="tf-opts"><button class="tf-btn" onclick="aTF(this,${i},'True')">True</button><button class="tf-btn" onclick="aTF(this,${i},'False')">False</button><button class="tf-btn" onclick="aTF(this,${i},'Not Given')">Not Given</button></div><div class="feedback" id="tff${i}"></div>`;
+    c.appendChild(d);
+  });
+}
+function aTF(btn,qi,ch){
+  const btns=btn.closest('.tf-opts').querySelectorAll('.tf-btn');
+  btns.forEach(b=>b.disabled=true);
+  const q=tfQ[qi];const fb=document.getElementById(`tff${qi}`);
+  const isNG=q.ans==='Not Given';
+  if(ch===q.ans){
+    btn.classList.add(isNG?'ng-correct':'correct');
+    fb.className='feedback show '+(isNG?'ng':'correct');
+    fb.textContent='✓ '+q.exp;
+  } else {
+    btn.classList.add('wrong');
+    const cb=[...btns].find(b=>b.textContent===q.ans);
+    if(cb)cb.classList.add(isNG?'ng-correct':'correct');
+    fb.className='feedback show wrong';
+    fb.textContent='✗ '+q.exp;
+  }
+}
+
+/* ═══════ VOCABULARY MATCHING ═══════ */
+const vocabData=[
+  {word:"persist",def:"to continue doing something despite difficulty or opposition",context:"The old man persisted in his attempt to strike up a conversation with the boy."},
+  {word:"omen",def:"a sign or event believed to predict a future outcome, good or bad",context:"The boy remembered that butterflies were a good omen, just as his grandfather had taught him."},
+  {word:"accustomed",def:"familiar with something through long experience; used to",context:"He had to choose between something he had become accustomed to and something he wanted to have."},
+  {word:"levanter",def:"a strong easterly wind blowing in the western Mediterranean region",context:"The levanter increased in intensity as the boy stood on the castle wall looking toward Africa."},
+  {word:"irritating",def:"causing annoyance or mild anger; frustrating",context:"The old man called the book important but irritating, saying it described people's inability to choose their destiny."},
+  {word:"breastplate",def:"a piece of armour or decorated plate worn over the chest",context:"The old man opened his cape to reveal a breastplate of heavy gold covered with precious stones."},
+  {word:"converge",def:"to come together from different directions towards the same point or conclusion",context:"All the forces in the boy's life seemed to converge on a single decision: whether to go to Egypt."},
+  {word:"bitterness",def:"a feeling of anger, disappointment, or resentment at being treated unfairly",context:"'People learn, early in their lives, what is their reason for being,' said the old man, with a certain bitterness."},
+  {word:"flock",def:"a group of sheep, birds, or other animals kept or moving together",context:"Melchizedek sat on the wall of the fort watching the boy's former flock fidgeting nearby, uneasy with their new owner."},
+  {word:"plowing",def:"moving steadily through something with great effort or force (used figuratively of ships)",context:"Melchizedek watched a small ship that was plowing its way out of the port, heading toward Africa."}
+];
+
+const shuffledDefs=[...vocabData].sort(()=>Math.random()-0.5);
+let selVWord=null;
+const matches={};
+
+function buildVocab(){
+  const wl=document.getElementById('v-words');
+  const dl=document.getElementById('v-defs');
+  vocabData.forEach((item,i)=>{
+    const w=document.createElement('div');
+    w.className='v-word';w.textContent=item.word;w.dataset.idx=i;
+    w.onclick=()=>selectVWord(w,i);
+    wl.appendChild(w);
+  });
+  shuffledDefs.forEach((item,i)=>{
+    const d=document.createElement('div');
+    d.className='v-def';d.textContent=item.def;
+    d.dataset.word=item.word;
+    d.onclick=()=>matchDef(d);
+    dl.appendChild(d);
+  });
+}
+
+function selectVWord(el,idx){
+  if(el.classList.contains('used-v'))return;
+  if(selVWord)selVWord.classList.remove('selected-v');
+  selVWord=el;el.classList.add('selected-v');
+}
+
+function matchDef(defEl){
+  if(!selVWord||defEl.classList.contains('matched'))return;
+  const wordText=selVWord.textContent;
+  const defText=defEl.textContent;
+  matches[wordText]=defText;
+  selVWord.classList.remove('selected-v');
+  selVWord.classList.add('used-v');
+  defEl.classList.add('matched');
+  defEl.style.opacity='0.35';
+  defEl.style.cursor='default';
+  selVWord=null;
+
+  // add to matched area
+  const area=document.getElementById('matched-area');
+  const list=document.getElementById('matched-list');
+  area.style.display='block';
+  const pair=document.createElement('div');
+  pair.className='match-pair';pair.id=`pair-${wordText}`;
+  pair.innerHTML=`<span class="pair-word">${wordText}</span><span class="pair-arrow">→</span><span class="pair-def">${defText}</span><span class="pair-icon" id="picon-${wordText}"></span>`;
+  list.appendChild(pair);
+
+  if(Object.keys(matches).length===vocabData.length){
+    document.getElementById('vocab-score-wrap').classList.add('show');
+  }
+}
+
+function checkVocab(){
+  let c=0;
+  vocabData.forEach(item=>{
+    const pair=document.getElementById(`pair-${item.word}`);
+    const icon=document.getElementById(`picon-${item.word}`);
+    if(!pair)return;
+    if(matches[item.word]===item.def){
+      pair.classList.add('correct-pair');icon.textContent='✓';c++;
+    } else {
+      pair.classList.add('wrong-pair');icon.textContent='✗';
+      // show correct definition
+      const corrNote=document.createElement('div');
+      corrNote.style.cssText='font-size:12px;color:var(--teal);margin-top:4px;font-style:italic;grid-column:1/-1';
+      corrNote.textContent='Correct definition: '+item.def;
+      pair.appendChild(corrNote);
+    }
+  });
+  document.getElementById('vocab-score-wrap').classList.remove('show');
+  const sc=document.getElementById('vocab-score-line');
+  sc.className='score-line show';
+  sc.innerHTML=`Score: <strong>${c} / 10</strong>`;
+}
+
+/* ═══════ TAB SWITCHING ═══════ */
+function showTab(id,el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+buildMC();
+buildTF();
+buildVocab();
+</script>
+</body>
+</html>
